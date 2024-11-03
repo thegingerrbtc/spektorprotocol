@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Spektor Protocol White Paper</title>
+<style>
+    body {
+        background-color: #343541;
+        color: #ececf1;
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        margin: 20px;
+    }
+    h1, h2, h3, h4 {
+        color: #00a67e;
+    }
+    h1 {
+        font-size: 2em;
+        border-bottom: 2px solid #00a67e;
+        padding-bottom: 10px;
+    }
+    h2 {
+        font-size: 1.6em;
+        margin-top: 40px;
+    }
+    h3 {
+        font-size: 1.4em;
+        margin-top: 30px;
+    }
+    h4 {
+        font-size: 1.2em;
+        margin-top: 20px;
+    }
+    p {
+        margin-bottom: 15px;
+    }
+    ul {
+        margin-left: 20px;
+        margin-bottom: 15px;
+    }
+    li {
+        margin-bottom: 5px;
+    }
+    code {
+        background-color: #444654;
+        padding: 2px 4px;
+        border-radius: 4px;
+        color: #e1e1e1;
+    }
+</style>
+</head>
+<body>
+
+<h1>Spektor Protocol White Paper</h1>
+
+<h2>Abstract</h2>
+
+<p>
+The Spektor Protocol introduces a novel approach to decentralized, self-custody wallet management by enabling secure and consistent access to digital assets without requiring users to store sensitive seed phrases or private keys. Instead of relying on stored recovery phrases, Spektor uses deterministic key derivation by combining static blockchain anchor points, user-defined personal data, and a unique user-designated PIN to generate high-entropy keys in-memory during each session. Importantly, keys are never stored on the user's device; they exist only temporarily during active sessions and disappear upon logout.
+</p>
+
+<p>
+Spektor offers three deployment models—Lite, Self-Hosted, and Community Node—to cater to different user preferences regarding security, decentralization, and control. The Community Node model allows users to host their own nodes, creating a distributed network that enhances scalability and user autonomy without depending on centralized infrastructure.
+</p>
+
+<h2>1. Introduction</h2>
+
+<h3>Problem Statement</h3>
+
+<p>
+Traditional wallet security models require users to store private keys or seed phrases to access their assets, posing significant risks. Many users store these sensitive phrases insecurely—using digital notepads, screenshots, emails, or text messages—making them vulnerable to loss or theft. Alternatively, relying on custodial services like exchanges introduces trust dependencies and potential privacy compromises, as users depend on third parties to safeguard their assets.
+</p>
+
+<h3>Spektor’s Deterministic Approach to Reliable Key Derivation</h3>
+
+<p>
+Spektor addresses these challenges by offering a self-custody model that eliminates the need for users to manage or store seed phrases. Spektor's logic leverages reproducible entropy sources—including static blockchain data, user-defined personal answers, and a secure PIN—to securely reconstruct the user's key in each session. This ensures consistent and reliable access without storage or retrieval concerns.
+</p>
+
+<h3>Benefits of Reliable, Deterministic Derivation</h3>
+
+<p>
+By combining stable blockchain data, user-specific inputs, and a secure PIN, Spektor generates high-entropy keys with precision. This deterministic approach allows users to access their wallets safely without needing to store sensitive recovery phrases, enhancing both security and user experience.
+</p>
+
+<h2>2. Deterministic Key Derivation Logic</h2>
+
+<p>
+At the core of Spektor's security model is deterministic entropy generation, which consistently and securely produces a unique key for each user session without persistent storage.
+</p>
+
+<h3>Entropy Generation</h3>
+
+<p>
+Spektor combines multiple secure sources:
+</p>
+
+<ol>
+    <li>
+        <strong>Blockchain Anchor Points</strong>: Incorporates immutable, verifiable blockchain data, such as the Ethereum genesis block hash, providing a trusted anchor without requiring network calls.
+    </li>
+    <li>
+        <strong>User-Defined Personal Anchors</strong>: Users answer five personal questions (e.g., "What was your favorite childhood toy?"). Answers are standardized to ensure consistency, adding unique, user-specific entropy.
+    </li>
+    <li>
+        <strong>PIN-Selected Hashes</strong>: A six-digit PIN further personalizes entropy by selecting specific blockchain anchors, enhancing randomness and security.
+    </li>
+</ol>
+
+<h3>Consistent Key Derivation Logic</h3>
+
+<p>
+Spektor deterministically combines these entropy sources to produce the same secure key in every session. This reliable reproducibility allows users to confidently access their assets without needing stored data.
+</p>
+
+<h2>3. Session-Based Key Handling</h2>
+
+<h3>Session-Based Key Generation</h3>
+
+<p>
+Spektor derives keys directly in server RAM at the start of each session. Keys exist only temporarily—"like a ghost"—during active use and are cleared upon logout. This minimizes exposure to potential security risks associated with persistent storage or the user's own imperfect storage solutions.
+</p>
+
+<h3>Avoidance of Persistent Storage</h3>
+
+<p>
+With on-the-fly derivation, there is no need to store private keys or recovery phrases, eliminating risks of data being compromised over time. Each session remains independent and secure.
+</p>
+
+<h3>Security Benefits of In-Memory Handling</h3>
+
+<p>
+By handling keys only in memory, Spektor reduces the attack surface. Sensitive key material exists solely in RAM during the session, and attackers would need real-time access to device memory to compromise it. This design isolates each session, preventing cumulative risks.
+</p>
+
+<h2>4. Deployment Models</h2>
+
+<h3>Lite</h3>
+
+<p>
+A straightforward, Spektor-hosted instance ideal for users seeking simplicity. Lite clients connect to a Spektor-hosted server that securely handles key derivation and memory-only access.
+</p>
+
+<h3>Self-Hosted</h3>
+
+<p>
+Users install and run Spektor locally on their own hardware, giving advanced users maximum control over key derivation and session handling while benefiting from Spektor's consistent, deterministic key reproduction.
+</p>
+
+<h3>Community Node</h3>
+
+<p>
+Allows users to operate their own nodes, decentralizing the Spektor infrastructure. In this model, each node:
+</p>
+
+<ul>
+    <li><strong>Verifies Code Integrity</strong>: Nodes pass hashing checks to ensure they are running genuine, unaltered Spektor code.</li>
+    <li><strong>Processes API Requests</strong>: Nodes handle API requests for Lite clients, distributing network load and enhancing scalability.</li>
+    <li><strong>Earns Transaction Fees</strong>: Each node earns 20% of the transaction fees for processed requests, incentivizing reliable uptime and participation.</li>
+</ul>
+
+<h2>5. Security Model</h2>
+
+<h3>Deterministic Key Derivation</h3>
+
+<p>
+Spektor ensures reliable access by combining blockchain anchors, user-provided answers, and a secure PIN, enabling consistent key regeneration without storing sensitive information. This removes the risks associated with key storage while ensuring secure access.
+</p>
+
+<h3>Code Hashing for Integrity Verification</h3>
+
+<p>
+The protocol enforces code hashing to verify each node's integrity, preventing unauthorized or modified versions from participating in the network. Only verified instances of Spektor can generate the correct key, securing the network against tampering.
+</p>
+
+<h3>Memory-Only Key Handling</h3>
+
+<p>
+By keeping the user's private key only in RAM during the session and never transferring it to the client device, Spektor minimizes the risk of exposure, even if the client device is insecure. All functions requiring key access occur in-memory on the server.
+</p>
+
+<h2>6. Economic and Incentive Model</h2>
+
+<h3>Transaction Fee Allocation</h3>
+
+<p>
+In the Community Node model, nodes that process transaction requests receive 20% of the associated transaction fees. This incentivizes users to operate reliable nodes and participate in the network.
+</p>
+
+<h3>Benefits of User Participation</h3>
+
+<p>
+This model promotes decentralization and network resilience by distributing both network load and incentives. It allows Spektor to scale through user-hosted infrastructure rather than centralized servers, enhancing both reliability and scalability.
+</p>
+
+<h2>7. Technical Implementation Details</h2>
+
+<h3>Entropy Management and Key Generation</h3>
+
+<p>
+Spektor's deterministic derivation combines stable blockchain data, user inputs, and PIN-selected anchors to ensure consistent entropy across sessions. This reliable entropy allows users to access their wallets securely without local storage.
+</p>
+
+<h3>Code Hash Verification</h3>
+
+<p>
+Each node verifies its code against a reference hash to confirm integrity. This step prevents unauthorized modifications and ensures that only verified instances of Spektor participate in the network.
+</p>
+
+<h3>API Aggregator</h3>
+
+<p>
+An API aggregator manages Lite client requests, routing them to the most reliable nodes. This optimizes load distribution, ensuring efficient access without central bottlenecks.
+</p>
+
+<h2>8. Use Cases and Applications</h2>
+
+<ul>
+    <li><strong>Decentralized Wallet Security</strong>: Spektor offers a secure solution for decentralized wallet management by eliminating stored seed phrases and reproducing keys on-the-fly.</li>
+    <li><strong>Community-Driven Node Network</strong>: Users can contribute to the ecosystem by hosting nodes, reinforcing Spektor's commitment to decentralization.</li>
+    <li><strong>Institutional Use</strong>: Spektor's secure, tamper-proof key derivation model suits institutions needing private key management without centralized storage or custody.</li>
+</ul>
+
+<h2>9. Conclusion and Future Roadmap</h2>
+
+<h3>Vision for Spektor’s Future</h3>
+
+<p>
+Spektor introduces a secure, scalable solution to decentralized finance by enabling consistent, memory-only key reproduction. By eliminating the need for persistent storage and ensuring reliable access across sessions, Spektor sets a new standard for privacy, control, and accessibility.
+</p>
+
+<h3>Roadmap</h3>
+
+<ol>
+    <li>
+        <strong>Feature Expansion</strong>:
+        <ul>
+            <li>Support multi-chain integrations for managing assets across different blockchains.</li>
+            <li>Implement additional advanced security configurations for varied institutional and individual user needs.</li>
+            <li>Develop hardware wallets that allow users to benefit from on-the-fly seed phrase reconstruction and air-gapped key use.</li>
+        </ul>
+    </li>
+    <li>
+        <strong>Enterprise Solutions</strong>:
+        <ul>
+            <li>Develop enterprise-specific features with customizable security and compliance integrations.</li>
+            <li>Create extended reporting and audit capabilities for regulatory compliance.</li>
+        </ul>
+    </li>
+    <li>
+        <strong>Enhanced Scalability</strong>:
+        <ul>
+            <li>Optimize node connectivity and reliability in the Community Node model.</li>
+            <li>Introduce API aggregators and routing improvements to enhance accessibility and speed for Lite users.</li>
+        </ul>
+    </li>
+</ol>
+
+<h3>Community Invitation</h3>
+
+<p>
+Spektor invites developers, security experts, and contributors to help build a secure future for digital finance. By running nodes or contributing code, the community can shape Spektor's path toward a secure, decentralized network that prioritizes privacy and self-custody. As an open-source, self-custody protocol, Spektor empowers users to protect their assets without relying on centralized custodians, ushering in a new era of secure, user-controlled digital asset management.
+</p>
+
+</body>
+</html>
